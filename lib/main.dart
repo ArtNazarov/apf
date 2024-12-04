@@ -1,6 +1,25 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+ 
 
+Future<void> setExecutable(String filePath) async {
+  var file = File(filePath);
+  if (await file.exists()) {
+    // Устанавливаем атрибут исполняемости с помощью команды chmod
+    var result = await Process.run('chmod', ['+x', filePath]);
+
+    if (result.exitCode == 0) {
+      print('Атрибут исполняемости установлен для $filePath');
+    } else {
+      print('Ошибка при установке атрибута: ${result.stderr}');
+    }
+  } else {
+    print('Файл не найден: $filePath');
+  }
+}
+ 
 
 const String KONSOLE_SHELL_PATH = '/usr/bin/konsole';
 
@@ -27,9 +46,23 @@ class ProcessParams {
   const String ACT_CAP_ZIP_TOOLS = 'Zip tools';
 
   Future<void> runProcessesSequentially(List<ProcessParams> processes) async {  
+
+
+      Directory tempDir = await getTemporaryDirectory();
+      String tempPath = tempDir.path;
+
+      final byteData = await rootBundle.load('assets/do_install.sh');
+      final buffer = byteData.buffer;
+      var filePath = tempPath + '/do_install.sh';  
+      await File(filePath).writeAsBytes(buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+      await setExecutable(filePath);
+    
+
   for (ProcessParams process in processes) {
-    print("${process.Name}\t${process.Number}\t${process.ShellPath}\n");
-    await Process.start(KONSOLE_SHELL_PATH, [process.ExecuteFlag,  process.ShellPath, process.Number, process.Name]).then((Process process) async {
+    print("${process.Name}\t${process.Number}\t${filePath}\n");
+
+    await Process.start(KONSOLE_SHELL_PATH, [process.ExecuteFlag,  filePath, process.Number, process.Name]).then((Process process) async {
       // Ждем завершения процесса
       int exitCode = await process.exitCode;
       print('Process finished with exit code: $exitCode');
@@ -39,7 +72,8 @@ class ProcessParams {
   }
 }
 
-void main() {
+void main() async {
+  
   runApp(MyApp());
 }
 
@@ -76,12 +110,10 @@ class _CheckboxListState extends State<CheckboxList> {
   List<bool> _checked =  List<bool>.filled(5, false);
  
 
-  void _install(int index) {
-    Directory current = Directory.current;
+  void _install(int index) async {
     ProcessParams pp = new ProcessParams();
     pp.Number = (index + 1).toString();
     pp.Name =  strCaptions[index] as String;
-    pp.ShellPath = '${current.path}/do_install.sh';
     ppScripts.add(pp);
   }
 
