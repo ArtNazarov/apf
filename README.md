@@ -1,16 +1,16 @@
 # apf
 
-A new Flutter project.
+Installer GUI written with Dart and Flutter
 
-## Getting Started
+## Usage
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+Execute in project folder
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```
+flutter run -d linux
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Screenshot
+
+![Screenshot](https://dl.dropbox.com/scl/fi/xl157ix87e834kipaybh5/apf.png?rlkey=catisov4e5oat0jvzg3tj63my&st=q3ds3drv)
