@@ -5,7 +5,10 @@ readonly DEV_TOOLS=2
 readonly SYS_TOOLS=3
 
 export Variant=$1
-echo $Variant
+export Action=$2
+echo "Выбран вариант $Variant Действие $Action"
+echo "Нажмите enter для продолжения"
+read
 case $Variant in
     $FILE_TOOLS)
         sudo pacman -Sy mc
