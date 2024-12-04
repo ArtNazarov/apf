@@ -87,7 +87,11 @@ class _CheckboxListState extends State<CheckboxList> {
                   });
                 },
               ),
-              Text('Install ${strCaptions[i]}'),
+              Text(
+                'Install ${strCaptions[i]}',
+                style: TextStyle(
+                    fontWeight: _checked[i] ? FontWeight.bold : FontWeight.normal
+              )),
             ],
           ),
         ElevatedButton(
